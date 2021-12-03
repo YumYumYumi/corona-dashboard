@@ -12,6 +12,7 @@ stylesheets = ["https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css",
                "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap", ]
 
 app = dash.Dash(__name__, external_stylesheets=stylesheets)
+app.title = "Corona-Dashboard"
 
 server = app.server
 
