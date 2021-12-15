@@ -153,7 +153,6 @@ app.layout = html.Div(
                                 {'label': country, 'value': country}
                                 for country in dropdown_options
                             ],
-                            multi=True
                         ),
                         dcc.Graph(id="country-graph"),
                     ])
