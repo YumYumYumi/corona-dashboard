@@ -143,7 +143,7 @@ app.layout = html.Div(
                     children=[
                         dcc.Dropdown(
                             style={
-                                "width": 220,
+                                "width": 700,
                                 "margin": "10px",
                                 "color": "#111111",
                             },
@@ -169,11 +169,10 @@ def update_hello(value):
         df = make_country_confirmed_df(value)
     else:
         df = make_global_confirmed_df()
-
     fig = px.line(
         df,
         x="date",
-        y="confirmed",
+        y="Confirmed",
         template="plotly_dark",
         labels={"value": "Cases", "variable": "Confirmed", "date": "Date"},
         hover_data={"value": ":,", "variable": False, "date": False},

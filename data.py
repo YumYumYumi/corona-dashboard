@@ -173,16 +173,6 @@ def make_country_confirmed_df(country):
     df = df.rename(columns={"index": "date"})
     return df
 
-
-def make_country_death_df(country):
-    url_time_death = url = 'https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv?raw=true'
-    df = pd.read_csv(url_time_death)
-    df = df.loc[df["Country/Region"] == country]
-    df = df.drop(columns=["Province/State", "Country/Region",
-                 "Lat", "Long"]).sum().reset_index(name="Death")
-    df = df.rename(columns={"index": "date"})
-    return df
-
  ###############
 
 
@@ -198,16 +188,4 @@ def make_global_confirmed_df():
     time_confirmed_df = time_confirmed_df.rename(columns={"index": "date"})
     return time_confirmed_df
 
-
-def make_global_death_df():
-    url_time_death = url = 'https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv?raw=true'
-    time_death_df = pd.read_csv(url_time_death)
-    time_death_df = (
-        time_death_df.drop(
-            ["Province/State", "Country/Region", "Lat", "Long"], axis=1)
-        .sum()
-        .reset_index(name="Death")
-    )
-    time_death_df = time_death_df.rename(columns={"index": "date"})
-    return time_death_df
 ####
