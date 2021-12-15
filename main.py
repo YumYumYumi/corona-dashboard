@@ -1,6 +1,6 @@
 """
 after change sth, plz write down in terminal,
-gid add .
+git add .
 git commit -m "New title"
 git push heroku master (or main)
 """
@@ -100,7 +100,7 @@ app.layout = html.Div(
             style={"textAlign": "center",
                    "paddingTop": "50px", "marginBottom": 100},
             children=[html.H1("Corona Dashboard", style={
-                              "fontSize": 50, "fontWeight": 700})],
+                              "fontSize": 70, "fontWeight": 700})],
         ),
         html.Div(
             style={"display": "grid",

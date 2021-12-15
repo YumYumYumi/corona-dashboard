@@ -15,14 +15,14 @@ def make_table(df):
                         style={
                             "display": "grid",
                             "gridTemplateColumns": "repeat(2, 1fr)",
-                            "fontWeight": "600",
-                            "fontSize": 12,
+                            "fontWeight": "700",
+                            "fontSize": 15,
                         },
                     )
                 ]
             ),
             html.Tbody(
-                style={"maxHeight": "30vh", "display": "block",
+                style={"maxHeight": "10vh", "display": "block",
                        "overflow": "scroll", },
                 children=[
                     html.Tr(
@@ -30,7 +30,8 @@ def make_table(df):
                             "display": "grid",
                             "gridTemplateColumns": "repeat(2, 1fr)",
                             "border-top": "1px solid white",
-                            "padding": "30px 5px",
+                            "padding": "10px 5px",
+                            "fontSize": 13,
                         },
                         children=[
                             html.Td(
