@@ -22,7 +22,7 @@ def make_table(df):
                 ]
             ),
             html.Tbody(
-                style={"maxHeight": "10vh", "display": "block",
+                style={"maxHeight": "350px", "display": "block",
                        "overflow": "scroll", },
                 children=[
                     html.Tr(

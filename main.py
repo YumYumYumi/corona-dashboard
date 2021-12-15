@@ -60,12 +60,12 @@ bars_graph_vac.update_traces(marker_color=["#ff5e57", "#0be881"])
 bars_graph_vac.update_layout(
     margin=dict(l=0, r=0, t=50, b=50),
     title={
-        'text': "Number of People Fully Vaccinated and World Population",
+        'text': "Fully Vaccinated vs. World Population",
         'y': 0.97,
         'x': 0.5,
         'xanchor': 'center',
         'yanchor': 'top'},
-    title_font=dict(size=28))
+    title_font=dict(size=14))
 
 
 choro_vaccine_map = px.choropleth(countries_df, locations="Country_Region",
