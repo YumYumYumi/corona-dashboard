@@ -1,11 +1,18 @@
+"""
+after change sth, plz write down in terminal,
+gid add .
+git commit -m "New title"
+git push heroku master (or main)
+"""
+
 import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
 import plotly.express as px
+from plotly.subplots import make_subplots
 import pandas as pd
-import plotly.express as px
-from data import countries_df, totals_df, dropdown_options, make_global_df, make_country_df
+from data import countries_df, totals_df, dropdown_options, make_global_confirmed_df, make_country_confirmed_df, top10_table, totals_df_bar
 from builders import make_table
 
 stylesheets = ["https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css",
@@ -17,39 +24,72 @@ app.title = "Corona-Dashboard"
 server = app.server
 
 bubble_map = px.scatter_geo(countries_df,
-                            size="Confirmed",
+                            size="7_Days_Incidence_Rate",
                             hover_name="Country_Region",
-                            color="Confirmed",
+                            color="7_Days_Incidence_Rate",
                             locations="Country_Region",
                             locationmode="country names",
-                            size_max=50,
+                            size_max=30,
                             template="plotly_dark",
-                            color_continuous_scale=px.colors.sequential.Oryel,
-                            title="Confirmed Cases By Country",
+                            color_continuous_scale=px.colors.sequential.dense,
                             projection="natural earth",
                             hover_data={
                                 "Confirmed": ":,",
                                 "Deaths": ":,",
-                                 "Recovered": ":,",
+                                "Population": ":,",
+                                "Yesterday_Confirmed": ":,",
                                  "Country_Region": False
                             })
 bubble_map.update_layout(
-    margin=dict(l=0, r=0, t=50, b=0))
+    margin=dict(l=0, r=0, t=50, b=50),
+    title={
+        'text': "7 Days Incidence Rate By Country",
+        'y': 0.97,
+        'x': 0.424,
+        'xanchor': 'center',
+        'yanchor': 'top'},
+    title_font=dict(size=28))
 
-bars_graph = px.bar(totals_df,
-                    x="condition",
-                    y="count",
-                    template="plotly_dark",
-                    title="Toal Global Cases",
-                    hover_data={'count': ":,"},
-                    labels={"condition": "Condition", "count": "Count", "color": "Condition"})
-#
-# bars_graph.update_layout(
-#    xaxis=dict(title="Condition"),
-#    yaxis=dict(title="Count")
-# )
-# flat ui colors
-bars_graph.update_traces(marker_color=["#ffdd59", "#ff5e57", "#0be881"])
+bars_graph_vac = px.bar(totals_df_bar,
+                        x="condition",
+                        y="count",
+                        template="plotly_dark",
+                        hover_data={'count': ":,"},
+                        labels={"condition": "Condition", "count": "Count", "color": "Condition"})
+bars_graph_vac.update_traces(marker_color=["#ff5e57", "#0be881"])
+bars_graph_vac.update_layout(
+    margin=dict(l=0, r=0, t=50, b=50),
+    title={
+        'text': "Number of People Fully Vaccinated and World Population",
+        'y': 0.97,
+        'x': 0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'},
+    title_font=dict(size=28))
+
+
+choro_vaccine_map = px.choropleth(countries_df, locations="Country_Region",
+                                  locationmode="country names",
+                                  color="Fully_vaccinated_percent",
+                                  template="plotly_dark",
+                                  projection="natural earth",
+                                  hover_name="Country_Region",
+                                  hover_data={
+                                      "Population": ":,",
+                                      "People_fully_vaccinated": ":,",
+                                      "Country_Region": False
+                                  },
+                                  color_continuous_scale=px.colors.sequential.Oryel)
+
+choro_vaccine_map.update_layout(
+    margin=dict(l=0, r=0, t=50, b=50),
+    title={
+        'text': "% of the population fully vaccinated against COVID-19",
+        'y': 0.97,
+        'x': 0.424,
+        'xanchor': 'center',
+        'yanchor': 'top'},
+    title_font=dict(size=28))
 
 
 app.layout = html.Div(
@@ -59,12 +99,14 @@ app.layout = html.Div(
         html.Header(
             style={"textAlign": "center",
                    "paddingTop": "50px", "marginBottom": 100},
-            children=[html.H1("Corona Dashboard", style={"fontSize": 40})],
+            children=[html.H1("Corona Dashboard", style={
+                              "fontSize": 50, "fontWeight": 700})],
         ),
         html.Div(
             style={"display": "grid",
                    "gap": 50,
                    "gridTemplateColumns": "repeat(4,1fr)",
+                   "margin": "10px"
                    },
             children=[
                 html.Div(
@@ -72,23 +114,37 @@ app.layout = html.Div(
                     children=[dcc.Graph(figure=bubble_map)]),
                 html.Div(
                     children=[
-                        make_table(countries_df)]
+                        make_table(top10_table)]
                 )]
         ),
         html.Div(
             style={"display": "grid",
                    "gap": 50,
                    "gridTemplateColumns": "repeat(4,1fr)",
+                   "margin": "10px"
                    },
             children=[
-                html.Div(children=[dcc.Graph(figure=bars_graph)]),
                 html.Div(
                     style={"grid-column": "span 3"},
+                    children=[dcc.Graph(figure=choro_vaccine_map)]),
+                html.Div(
+                    children=[
+                        dcc.Graph(figure=bars_graph_vac)]
+                )]
+        ),
+        html.Div(
+            style={"display": "grid",
+                   "gap": 50,
+                   "gridTemplateColumns": "repeat(2,1fr)",
+                   },
+            children=[
+                html.Div(
+                    style={"grid-column": "span 2"},
                     children=[
                         dcc.Dropdown(
                             style={
-                                "width": 320,
-                                "margin": "0 auto",
+                                "width": 220,
+                                "margin": "10px",
                                 "color": "#111111",
                             },
                             placeholder="Select a Country",
@@ -96,7 +152,8 @@ app.layout = html.Div(
                             options=[
                                 {'label': country, 'value': country}
                                 for country in dropdown_options
-                            ]
+                            ],
+                            multi=True
                         ),
                         dcc.Graph(id="country-graph"),
                     ])
@@ -109,21 +166,20 @@ app.layout = html.Div(
 @app.callback(Output("country-graph", "figure"), [Input("country", "value")])
 def update_hello(value):
     if value:
-        df = make_country_df(value)
+        df = make_country_confirmed_df(value)
     else:
-        df = make_global_df()
+        df = make_global_confirmed_df()
+
     fig = px.line(
         df,
         x="date",
-        y=["confirmed", "deaths", "recovered"],
+        y=["confirmed"],
         template="plotly_dark",
         labels={"value": "Cases", "variable": "Condition", "date": "Date"},
         hover_data={"value": ":,", "variable": False, "date": False},
     )
     fig.update_xaxes(rangeslider_visible=True)
     fig["data"][0]["line"]["color"] = "#ffdd59"
-    fig["data"][1]["line"]["color"] = "#ff5e57"
-    fig["data"][2]["line"]["color"] = "#0be881"
     return fig
 
 
