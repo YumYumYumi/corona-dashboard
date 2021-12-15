@@ -174,11 +174,10 @@ def update_hello(value):
         x="date",
         y="Confirmed",
         template="plotly_dark",
-        labels={"value": "Cases", "variable": "Confirmed", "date": "Date"},
+        #labels={"value": "Cases", "variable": "Confirmed", "date": "Date"},
         hover_data={"value": ":,", "variable": False, "date": False},
     )
-    fig.update_xaxes(rangeslider_visible=True)
-    fig["data"][0]["line"]["color"] = "#ffdd59"
+
     return fig
 
 
