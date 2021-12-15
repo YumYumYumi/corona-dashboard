@@ -173,9 +173,9 @@ def update_hello(value):
     fig = px.line(
         df,
         x="date",
-        y=["confirmed"],
+        y="confirmed",
         template="plotly_dark",
-        labels={"value": "Cases", "variable": "Condition", "date": "Date"},
+        labels={"value": "Cases", "variable": "Confirmed", "date": "Date"},
         hover_data={"value": ":,", "variable": False, "date": False},
     )
     fig.update_xaxes(rangeslider_visible=True)

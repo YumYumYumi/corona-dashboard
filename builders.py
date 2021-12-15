@@ -16,13 +16,13 @@ def make_table(df):
                             "display": "grid",
                             "gridTemplateColumns": "repeat(2, 1fr)",
                             "fontWeight": "700",
-                            "fontSize": 15,
+                            "fontSize": 13,
                         },
                     )
                 ]
             ),
             html.Tbody(
-                style={"maxHeight": "350px", "display": "block",
+                style={"maxHeight": "370px", "display": "block",
                        "overflow": "scroll", },
                 children=[
                     html.Tr(
