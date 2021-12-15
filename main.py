@@ -174,8 +174,8 @@ def update_hello(value):
         x="date",
         y="Confirmed",
         template="plotly_dark",
-        #labels={"value": "Cases", "variable": "Confirmed", "date": "Date"},
-        #hover_data={"value": ":,", "variable": False, "date": False},
+        labels={"value": "Cases", "variable": "Confirmed", "date": "Date"},
+        hover_data={"value": ":,"},
     )
 
     return fig
