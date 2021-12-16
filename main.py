@@ -144,7 +144,7 @@ app.layout = html.Div(
                         dcc.Dropdown(
                             style={
                                 "width": 700,
-                                "margin": "10px",
+                                "margin": "0 auto",
                                 "color": "#111111",
                             },
                             placeholder="Select a Country",
@@ -153,7 +153,6 @@ app.layout = html.Div(
                                 {'label': country, 'value': country}
                                 for country in dropdown_options
                             ],
-                            multi=True
                         ),
                         dcc.Graph(id="country-graph"),
                     ])
