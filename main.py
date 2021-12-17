@@ -12,7 +12,7 @@ from dash.dependencies import Input, Output
 import plotly.express as px
 from plotly.subplots import make_subplots
 import pandas as pd
-from data import countries_df, totals_df, dropdown_options, make_global_confirmed_df, make_country_confirmed_df, top10_table, totals_df_bar, all_merged_df, new_melted_df
+from data import countries_df, totals_df, dropdown_options, make_global_confirmed_df, make_country_confirmed_df, top10_table, totals_df_bar, all_merged_df, new_melted_df, all_continents
 from builders import make_table
 
 stylesheets = ["https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css",
@@ -97,6 +97,7 @@ animation_graph = px.scatter(all_merged_df, x="Fully_vaccinated_percent", y="Inc
                              log_y=True,
                              template="plotly_dark",
                              size_max=40, range_x=[0, 100], range_y=[10, 1000])
+
 
 app.layout = html.Div(
     style={"textAlign": "center", "minHeight": "100vh", "backgroundColor": "#111111",
