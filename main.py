@@ -192,8 +192,7 @@ app.layout = html.Div(
                         dcc.Graph(id="line-chart"),
                     ])
             ]
-        ),
-        html.Div(
+        ), """  html.Div(
             style={"display": "grid",
                    "gap": 50,
                    "gridTemplateColumns": "repeat(2,1fr)",
@@ -205,7 +204,8 @@ app.layout = html.Div(
                         dcc.Graph(figure=animation_graph),
                     ])
             ]
-        )
+        )"""
+
     ],
 )
 
