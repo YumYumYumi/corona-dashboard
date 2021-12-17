@@ -140,7 +140,32 @@ app.layout = html.Div(
                         dcc.Graph(figure=bars_graph_vac)]
                 )]
         ),
-        ###
+        html.Div(
+            style={"display": "grid",
+                   "gap": 50,
+                   "gridTemplateColumns": "repeat(2,1fr)",
+                   },
+            children=[
+                html.Div(
+                    style={"grid-column": "span 2"},
+                    children=[
+                        dcc.Dropdown(
+                            style={
+                                "width": 700,
+                                "margin": "0 auto",
+                                "color": "#111111",
+                            },
+                            placeholder="Select a Country",
+                            id="country",
+                            options=[
+                                {'label': country, 'value': country}
+                                for country in dropdown_options
+                            ],
+                        ),
+                        dcc.Graph(id="country-graph"),
+                    ])
+            ]
+        ),
         html.Div(
             style={"display": "grid",
                    "gap": 50,
@@ -168,7 +193,7 @@ app.layout = html.Div(
                         dcc.Graph(id="line-chart"),
                     ])
             ]
-        ), """  html.Div(
+        ),  html.Div(
             style={"display": "grid",
                    "gap": 50,
                    "gridTemplateColumns": "repeat(2,1fr)",
@@ -180,12 +205,12 @@ app.layout = html.Div(
                         dcc.Graph(figure=animation_graph),
                     ])
             ]
-        )"""
+        )
 
     ],
 )
 
-"""
+
 @app.callback(Output("country-graph", "figure"), [Input("country", "value")])
 def update_hello(value):
     if value:
@@ -201,7 +226,6 @@ def update_hello(value):
     )
     fig.update_xaxes(rangeslider_visible=True)
     return fig
-"""
 
 
 @app.callback(
