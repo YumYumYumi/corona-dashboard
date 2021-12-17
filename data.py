@@ -4,7 +4,8 @@ from datetime import timedelta
 from datetime import datetime, timezone
 import numpy as np
 from math import floor, ceil
-conditions = ["confirmed", "deaths", "recovered"]
+
+pd.options.mode.chained_assignment = None
 
 today = date.today()
 yesterday = today - timedelta(days=1)
@@ -199,7 +200,7 @@ new_melted_df = new_melted_df.rename(
     columns={'7_Days_Incidence_Rate': 'Incidence_Rate'})
 new_melted_df = new_melted_df.rename(columns={'sub-region': 'subregion'})
 new_melted_df = new_melted_df.rename(columns={'Country_Region': 'Country'})
-new_melted_df
+# new_melted_df
 new_melted_df["Date"] = pd.to_datetime(new_melted_df["Date"])
 new_melted_df["Date"] = new_melted_df["Date"].dt.strftime('%Y-%m-%d')
 new_melted_df = new_melted_df.sort_values(by=['Country', 'Date']).reset_index()
@@ -224,7 +225,13 @@ all_merged_df[["people_fully_vaccinated"]] = all_merged_df[[
 all_merged_df[["people_fully_vaccinated"]] = all_merged_df[[
     "people_fully_vaccinated"]].fillna(method='bfill')
 all_merged_df = all_merged_df.drop('location', 1)
+all_merged_df['Population'] = all_merged_df['Population'].astype(int)
 all_merged_df["Fully_vaccinated_percent"] = (
     all_merged_df["people_fully_vaccinated"] / (all_merged_df["Population"]))*100
 #########################################################
-all_continents = new_melted_df.subregion.unique()
+
+all_continents = ['Eastern Asia', 'Central Asia', 'Southern Asia', 'South-eastern Asia', 'Western Asia',
+                  'Northern Africa', 'Sub-Saharan Africa',
+                  'Latin America and the Caribbean', 'Northern America',
+                  'Eastern Europe', 'Northern Europe', 'Southern Europe', 'Western Europe', 'Melanesia', 'Micronesia', 'Polynesia', 'Australia and New Zealand']
+#unique = new_melted_df.sort_values("subregion").subregion.unique()
