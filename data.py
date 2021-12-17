@@ -53,8 +53,12 @@ daily_time_df_AuCaCh = daily_time_df_AuCaCh.loc[[
 daily_time_df_AuCaCh = daily_time_df_AuCaCh.reset_index()
 daily_time_df = daily_time_df[(daily_time_df['Province/State'].isnull())]
 daily_time_df = daily_time_df.drop(["Province/State"], axis=1)
-
 daily_time_df = daily_time_df.append(daily_time_df_AuCaCh, ignore_index=True)
+####################################################
+will_be_merged_df = daily_time_df.rename(columns={'Country/Region': 'Country_Region'})
+merged_df = pd.merge(countries_df, will_be_merged_df ,on="Country_Region", how='inner') ## go to line 195
+new_df = countries_df.iloc[:,:7]
+###################################################
 daily_time_df = daily_time_df.iloc[:, list(range(1)) + list(range(-8, 0))]
 daily_time_df["Cases_in_last_7_days"] = (
     daily_time_df.iloc[:, -1] - daily_time_df.iloc[:, -8])
@@ -187,5 +191,39 @@ def make_global_confirmed_df():
     )
     time_confirmed_df = time_confirmed_df.rename(columns={"index": "date"})
     return time_confirmed_df
-
 ####
+for i in range(15,len(merged_df.columns)):
+    new_df[merged_df.columns[i]] = ((merged_df.iloc[:, i] - merged_df.iloc[:, i-7])/ (merged_df["Population"]/100000)).astype(int)
+
+new_df = new_df.drop(['Confirmed', 'Deaths'], axis=1)
+
+new_melted_df=new_df.melt(id_vars=["Country_Region", "region","sub-region","Population","iso3"], 
+        var_name="Date", 
+        value_name="7_Days_Incidence_Rate")
+
+new_melted_df = new_melted_df.sort_values(by="Country_Region")
+new_melted_df = new_melted_df.rename(columns={'7_Days_Incidence_Rate': 'Incidence_Rate'})
+new_melted_df = new_melted_df.rename(columns={'sub-region': 'subregion'})
+new_melted_df = new_melted_df.rename(columns={'Country_Region': 'Country'})
+new_melted_df
+new_melted_df["Date"] = pd.to_datetime(new_melted_df["Date"]) 
+new_melted_df["Date"] = new_melted_df["Date"].dt.strftime('%Y-%m-%d')
+new_melted_df=new_melted_df.sort_values(by=['Country','Date']).reset_index()
+new_melted_df = new_melted_df.drop('index', 1)
+for i in new_melted_df.index[new_melted_df['Incidence_Rate'] < 0]:
+        new_melted_df['Incidence_Rate'].iloc[i] = new_melted_df['Incidence_Rate'].iloc[i-1]
+
+########################################################
+df_vac_owid_for_merge = pd.read_csv(vac_owid_url)
+df_vac_owid_for_merge = df_vac_owid_for_merge.loc[df_vac_owid_for_merge["date"]>= '2021-05-01']
+df_vac_owid_for_merge = df_vac_owid_for_merge[["location","iso_code","date","people_fully_vaccinated","total_boosters"]]
+df_vac_owid_for_merge = df_vac_owid_for_merge.rename(columns={'iso_code': 'iso3'})
+df_vac_owid_for_merge = df_vac_owid_for_merge.rename(columns={'date': 'Date'})
+
+new_melted_sub_df = new_melted_df.loc[new_melted_df["Date"]>= '2021-05-01'] 
+all_merged_df = new_melted_sub_df.merge(df_vac_owid_for_merge, on=["iso3","Date"])
+all_merged_df[["people_fully_vaccinated"]] = all_merged_df[["people_fully_vaccinated"]].fillna(method='ffill')
+all_merged_df[["people_fully_vaccinated"]] = all_merged_df[["people_fully_vaccinated"]].fillna(method='bfill')
+all_merged_df = all_merged_df.drop('location', 1)
+all_merged_df["Fully_vaccinated_percent"] = (all_merged_df["people_fully_vaccinated"]/ (all_merged_df["Population"]))*100
+#########################################################
