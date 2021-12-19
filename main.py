@@ -119,6 +119,21 @@ app.layout = html.Div(
             children=[
                 html.Div(
                     style={"grid-column": "span 3"},
+                    children=[dcc.Graph(figure=bubble_map)]),
+                html.Div(
+                    children=[
+                        make_table(top10_table)]
+                )]
+        ),
+        html.Div(
+            style={"display": "grid",
+                   "gap": 50,
+                   "gridTemplateColumns": "repeat(4,1fr)",
+                   "margin": "10px"
+                   },
+            children=[
+                html.Div(
+                    style={"grid-column": "span 3"},
                     children=[dcc.Graph(figure=choro_vaccine_map)]),
                 html.Div(
                     children=[
