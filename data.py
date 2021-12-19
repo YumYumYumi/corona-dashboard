@@ -12,6 +12,8 @@ yesterday = today - timedelta(days=1)
 yesterday = yesterday.strftime('%m-%d-%Y')
 two_days_ago = today - timedelta(days=2)
 two_days_ago = two_days_ago.strftime('%Y-%m-%d')
+three_days_ago = today - timedelta(days=3)
+three_days_ago = three_days_ago.strftime('%Y-%m-%d')
 two_days_ago_url = today - timedelta(days=2)
 two_days_ago_url = two_days_ago_url.strftime('%m-%d-%Y')
 now_utc = datetime.now(timezone.utc).strftime('%H')
@@ -92,7 +94,7 @@ countries_df['7_Days_Incidence_Rate'] = countries_df['7_Days_Incidence_Rate'].as
 vac_owid_url = 'https://github.com/owid/covid-19-data/blob/master/public/data/vaccinations/vaccinations.csv?raw=true'
 df_vac_owid = pd.read_csv(vac_owid_url)
 df_vac_owid = df_vac_owid[["location", "date", "people_fully_vaccinated"]]
-df_vac_owid = df_vac_owid.loc[df_vac_owid["date"] == two_days_ago]
+df_vac_owid = df_vac_owid.loc[df_vac_owid["date"] == three_days_ago]
 df_vac_owid_south_korea = df_vac_owid.loc[df_vac_owid["location"]
                                           == "South Korea"]
 df_vac_owid_south_korea = df_vac_owid_south_korea[["people_fully_vaccinated"]]
@@ -137,7 +139,7 @@ df_pop_sum = pd.DataFrame(
 
 totals_df = totals_df.append(df_pop_sum, sort=False)  # 7794592576.0
 totals_df = totals_df.reset_index()
-totals_df = totals_df.drop('index', 1)
+totals_df = totals_df.drop('index', axis=1)  # problem
 totals_df['count'] = totals_df['count'].astype('Int64')
 totals_df
 totals_df_bar = totals_df.iloc[2:4]
@@ -186,7 +188,7 @@ def make_global_confirmed_df():
 
 ####
 for i in range(15, len(merged_df.columns)):
-    new_df[merged_df.columns[i]] = (
+    new_df[merged_df.columns[i]] = (  # prblem plz copy
         (merged_df.iloc[:, i] - merged_df.iloc[:, i-7]) / (merged_df["Population"]/100000)).astype(int)
 
 new_df = new_df.drop(['Confirmed', 'Deaths'], axis=1)
@@ -204,7 +206,7 @@ new_melted_df = new_melted_df.rename(columns={'Country_Region': 'Country'})
 new_melted_df["Date"] = pd.to_datetime(new_melted_df["Date"])
 new_melted_df["Date"] = new_melted_df["Date"].dt.strftime('%Y-%m-%d')
 new_melted_df = new_melted_df.sort_values(by=['Country', 'Date']).reset_index()
-new_melted_df = new_melted_df.drop('index', 1)
+new_melted_df = new_melted_df.drop('index', axis=1)  # problem
 for i in new_melted_df.index[new_melted_df['Incidence_Rate'] < 0]:
     new_melted_df['Incidence_Rate'].iloc[i] = new_melted_df['Incidence_Rate'].iloc[i-1]
 
@@ -224,7 +226,7 @@ all_merged_df[["people_fully_vaccinated"]] = all_merged_df[[
     "people_fully_vaccinated"]].fillna(method='ffill')
 all_merged_df[["people_fully_vaccinated"]] = all_merged_df[[
     "people_fully_vaccinated"]].fillna(method='bfill')
-all_merged_df = all_merged_df.drop('location', 1)
+all_merged_df = all_merged_df.drop('location', axis=1)  # problem
 all_merged_df['Population'] = all_merged_df['Population'].astype(int)
 all_merged_df["Fully_vaccinated_percent"] = (
     all_merged_df["people_fully_vaccinated"] / (all_merged_df["Population"]))*100
