@@ -118,6 +118,33 @@ app.layout = html.Div(
                 html.Div(
                     style={"grid-column": "span 2"},
                     children=[
+                        dcc.Checklist(
+                            style={
+                                "width": 1000,
+                                "paidding": "10px",
+                                "margin": "0 auto",
+                                "color": "#ffffff",
+                            },
+                            id="checklist",
+                            options=[
+                                {'label': continent, 'value': continent}
+                                for continent in all_continents
+                            ],
+                            value=all_continents[11:12],
+                            labelStyle={'display': 'inline-block'}
+                        ),
+                        dcc.Graph(id="line-chart"),
+                    ])
+            ]
+        ), html.Div(
+            style={"display": "grid",
+                   "gap": 50,
+                   "gridTemplateColumns": "repeat(2,1fr)",
+                   },
+            children=[
+                html.Div(
+                    style={"grid-column": "span 2"},
+                    children=[
                         dcc.Graph(figure=animation_graph),
                     ])
             ]
