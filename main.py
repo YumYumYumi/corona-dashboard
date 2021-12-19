@@ -109,6 +109,21 @@ app.layout = html.Div(
                    "paddingTop": "50px", "marginBottom": 100},
             children=[html.H1("Corona Dashboard", style={
                               "fontSize": 70, "fontWeight": 700})],
+        ),
+        html.Div(
+            style={"display": "grid",
+                   "gap": 50,
+                   "gridTemplateColumns": "repeat(4,1fr)",
+                   "margin": "10px"
+                   },
+            children=[
+                html.Div(
+                    style={"grid-column": "span 3"},
+                    children=[dcc.Graph(figure=choro_vaccine_map)]),
+                html.Div(
+                    children=[
+                        dcc.Graph(figure=bars_graph_vac)]
+                )]
         ), html.Div(
             style={"display": "grid",
                    "gap": 50,
